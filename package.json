@@ -1,0 +1,69 @@
+{
+  "name": "code-shortener",
+  "publisher": "25DanielG",
+  "displayName": "Code Shortener",
+  "description": "An extension which contains many tools and features to shorten and compress code.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.71.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "extensionKind": [
+		"ui",
+		"workspace"
+	],
+  "keywords": [
+    "code",
+    "shorter",
+    "compress",
+    "tools"
+  ],
+  "activationEvents": [
+    "onCommand:code-shortener.removeEmptyLines",
+    "onCommand:code-shortener.combineVarDeclarations",
+    "onCommand:code-shortener.putBracesOnSameLine"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "code-shortener.removeEmptyLines",
+        "title": "Remove Empty Lines",
+        "category": "Code Shortener"
+      },
+      {
+        "command": "code-shortener.combineVarDeclarations",
+        "title": "Combine Variable Declarations",
+        "category": "Code Shortener"
+      },
+      {
+        "command": "code-shortener.putBracesOnSameLine",
+        "title": "Shorten New Line Braces",
+        "category": "Code Shortener"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.71.0",
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "eslint": "^8.20.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.0.0",
+    "typescript": "^4.7.4",
+    "@vscode/test-electron": "^2.1.5"
+  }
+}
