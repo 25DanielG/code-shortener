@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 const editor = vscode.window.activeTextEditor;
 var startBlockComments: number[] = [];
 var endBlockComments: number[] = [];
+var spaceBeforeBracePref = 1;
 let preDoc = editor?.document.getText();
 export async function activate(context: vscode.ExtensionContext) {
 	console.log('Code Shortener is currently active!');
@@ -67,15 +68,40 @@ export async function activate(context: vscode.ExtensionContext) {
 			vscode.window.showInformationMessage("No active editor open or editor is not a .java.");
 		}
 	});
-	context.subscriptions.push(disposable3);
-	//context.subscriptions.push(disposable2);
+	let disposable4 = vscode.commands.registerCommand('code-shortener.selectBraceSpacePreference', () => {
+		const choices = ["1", "2", "3", "4"];
+		let tmp;
+		return new Promise((resolve) => {
+			const quickPick = vscode.window.createQuickPick();
+			quickPick.items = choices.map(choice => ({ label: choice }));
+			quickPick.title = 'Select your space preceeding brace preference:';
+			quickPick.onDidChangeValue(() => {
+				if (!choices.includes(quickPick.value)) quickPick.items = [quickPick.value, ...choices].map(label => ({ label }));
+			});
+			quickPick.onDidAccept(() => {
+				const selection = quickPick.activeItems[0];
+				tmp = selection.label;
+				resolve(selection.label);
+				if(tmp !== undefined) {
+					spaceBeforeBracePref = +tmp;
+				} else {
+					vscode.window.showInformationMessage("Pick a search query to change the space preceeding brace preference.");
+					return;
+				}
+				vscode.window.showInformationMessage("Changed your space preceeding brace preference to: " + spaceBeforeBracePref);
+				quickPick.hide();
+			});
+			quickPick.show();
+		});
+	});
 	context.subscriptions.push(disposable);
+	//context.subscriptions.push(disposable2);
+	context.subscriptions.push(disposable3);
 }
 function removeEmptyLines(word: string) {
 	let allLines: string[] = word.split('\n');
 	for(let i = 0; i < allLines.length; ++i) {
 		if(allLines[i].trim().length === 0) {
-			console.log("Entered the if statement");
 			allLines.splice(i, 1);
 			--i;
 		}
@@ -86,11 +112,19 @@ function removeEmptyLines(word: string) {
 function putBracesOnSameLine(word: string) {
 	let allLines: string[] = word.split('\n');
 	let newAllLines: string[] = [];
+	let tmpStr: string = "";
+	for(let i = 0; i < spaceBeforeBracePref; ++i) {
+		tmpStr += " ";
+	}
 	for(let i = 0; i < allLines.length; ++i) {
 		if(!onlyOpenBrace(allLines[i])) {
 			newAllLines.push(allLines[i]);
 		} else {
-			newAllLines[newAllLines.length - 1] += "{";
+			while(newAllLines[newAllLines.length - 1].charAt(newAllLines[newAllLines.length - 1].length - 1) === " ") {
+				console.log("Removed brace at line: " + i);
+				newAllLines[newAllLines.length - 1] = newAllLines[newAllLines.length - 1].slice(0, newAllLines[newAllLines.length - 1].length - 1);
+			}
+			newAllLines[newAllLines.length - 1] += tmpStr + "{";
 		}
 	}
 	let newWord = newAllLines.join('\n');

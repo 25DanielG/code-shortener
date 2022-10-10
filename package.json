@@ -7,6 +7,10 @@
   "engines": {
     "vscode": "^1.71.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/25DanielG/code-shortener"
+  },
   "categories": [
     "Other"
   ],
@@ -23,7 +27,8 @@
   "activationEvents": [
     "onCommand:code-shortener.removeEmptyLines",
     "onCommand:code-shortener.combineVarDeclarations",
-    "onCommand:code-shortener.putBracesOnSameLine"
+    "onCommand:code-shortener.putBracesOnSameLine",
+    "onCommand:code-shortener.selectBraceSpacePreference"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -41,6 +46,11 @@
       {
         "command": "code-shortener.putBracesOnSameLine",
         "title": "Shorten New Line Braces",
+        "category": "Code Shortener"
+      },
+      {
+        "command": "code-shortener.selectBraceSpacePreference",
+        "title": "Select Spaces Before Brace Preference",
         "category": "Code Shortener"
       }
     ]
